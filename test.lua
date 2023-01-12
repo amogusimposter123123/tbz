@@ -1,8 +1,18 @@
+getgenv().Rdy = false;
 local Table = {};
 local TowerCounter = 0;
 local LocalPlayer = game:GetService("Players").LocalPlayer;
 local Workspace = game:GetService("Workspace");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+else
+    getgenv().Rdy = true
+    print('ready')
+end
+
+repeat task.wait() until getgenv().Rdy
 
 function IsLobby()
     if game.PlaceId == 4739557376 then
@@ -33,7 +43,9 @@ end
 if syn then
     game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
         if State == Enum.TeleportState.Started then
-            syn.queue_on_teleport()
+            syn.queue_on_teleport([[
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/amogusimposter123123/tbz/main/test.lua"))()
+            ]])
         end
     end)
 end
@@ -144,13 +156,3 @@ function Table:SelectModify(Modify)
         ReplicatedStorage.Events.UpdateAttributes:FireServer(Modify)      
     end
 end
-
---[[Table:UnequipAllTowers();
-Table:EquipTower("Sharpshooter");
-Table:CreateServer("Solo","Invite");
-Table:SelectMap("SkyIslands");
-Table:StartGame()]]
-Table:PlaceTower("Conscript",15.972390174865723, 56.974815368652344, 13.93061351776123, 0, 5)
-Table:UpgradeTower(1, 1, 0, 5)
-Table:UpgradeTower(1, 1, 0, 5)
-Table:SellTower(1, 0, 1)
