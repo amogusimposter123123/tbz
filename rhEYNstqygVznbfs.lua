@@ -38,6 +38,7 @@ spawn(function()
 end)
 Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
     spawn(function()
+        task.wait()
         local NumberValue = Instance.new("NumberValue", Tower)
         NumberValue.Name = "Number"
         NumberValue.Value = TowerCounter
@@ -49,6 +50,7 @@ local OldNameCall = nil;
         spawn(function()
             if self.Name == "PlaceTower" then
                 TowerCounter = TowerCounter + 1
+                task.wait()
             end
         end)
         return OldNameCall(self, ...)
