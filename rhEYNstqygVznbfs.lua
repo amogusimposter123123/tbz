@@ -37,10 +37,12 @@ spawn(function()
 end)
 local TowerCounter = 0
 Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
-        TowerCounter = TowerCounter + 1
-        local NumberValue = Instance.new("NumberValue", Tower)
-        NumberValue.Name = "Number"
-        NumberValue.Value = TowerCounter
+    spawn(function()
+            TowerCounter = TowerCounter + 1
+            local NumberValue = Instance.new("NumberValue", Tower)
+            NumberValue.Name = "Number"
+            NumberValue.Value = TowerCounter
+        end)
     end)
 end
 
