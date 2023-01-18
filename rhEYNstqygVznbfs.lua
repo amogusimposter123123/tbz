@@ -37,9 +37,11 @@ spawn(function()
     end
 end)
 Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
-    local NumberValue = Instance.new("NumberValue", Tower)
-    NumberValue.Name = "Number"
-    NumberValue.Value = TowerCounter
+    spawn(function()
+        local NumberValue = Instance.new("NumberValue", Tower)
+        NumberValue.Name = "Number"
+        NumberValue.Value = TowerCounter
+    end)
 end)
 local OldNameCall = nil;
     OldNameCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
