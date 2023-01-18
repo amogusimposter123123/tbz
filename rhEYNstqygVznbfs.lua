@@ -1,4 +1,4 @@
---getgenv().Rdy = false;
+getgenv().Rdy = false;
 local Table = {};
 local TowerCounter = 0;
 local LocalPlayer = game:GetService("Players").LocalPlayer;
@@ -113,3 +113,5 @@ function Table:CreateGame(Mode, Map, ModifiersTable)
         end
     end
 end
+
+return Table
