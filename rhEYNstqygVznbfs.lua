@@ -112,4 +112,12 @@ function Table:CreateGame(Mode, Map, ModifiersTable)
     end
 end
 
+function Table:StartGame(Difficulty)
+    if IsGame() then
+        ReplicatedStorage.Events.VoteGamemode:InvokeServer(Difficulty)
+        task.wait()
+        ReplicatedStorage.Events.EndVote:FireServer()
+    end
+end
+
 return Table
