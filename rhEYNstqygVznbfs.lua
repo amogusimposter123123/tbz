@@ -42,6 +42,7 @@ Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
             local NumberValue = Instance.new("NumberValue", Tower)
             NumberValue.Name = "Number"
             NumberValue.Value = TowerCounter
+            return
         end)
     end)
 end
