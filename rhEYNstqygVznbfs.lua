@@ -5,6 +5,7 @@ end
 repeat task.wait(0.5) until game:IsLoaded()
 
 local Table = {};
+local TowerCounter = 0;
 local LocalPlayer = game:GetService("Players").LocalPlayer;
 local Workspace = game:GetService("Workspace");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
@@ -35,16 +36,21 @@ spawn(function()
         end
     end
 end)
-local TowerCounter = 0
 Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
-    spawn(function()
-            TowerCounter = TowerCounter + 1
-            local NumberValue = Instance.new("NumberValue", Tower)
-            NumberValue.Name = "Number"
-            NumberValue.Value = TowerCounter
-            return
+    local NumberValue = Instance.new("NumberValue", Tower)
+    NumberValue.Name = "Number"
+    NumberValue.Value = TowerCounter
+end)
+local OldNameCall = nil;
+    OldNameCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+        local Args = {...}
+        spawn(function()
+            if self.Name == "PlaceTower" then
+                TowerCounter = TowerCounter + 1
+            end
         end)
-    end)
+        return OldNameCall(self, ...)
+    end))
 end
 
 function Table:EquipLoadout(Tower1,Tower2,Tower3,Tower4,Tower5)
@@ -68,8 +74,8 @@ end
 function Table:PlaceTower(Tower,pos1,pos2,pos3,Wave,Time)
     spawn(function()
         if IsGame() then
-            repeat task.wait(0.5) until Workspace.Game.GameStats.Wave.Value == Wave
-            repeat task.wait(0.5) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
             ReplicatedStorage.Events.PlaceTower:InvokeServer(Tower, Vector3.new(pos1, pos2, pos3), 0)
         end
     end)
@@ -78,8 +84,8 @@ end
 function Table:SellTower(Tower,Wave,Time)
     spawn(function()
         if IsGame() then
-            repeat task.wait(0.5) until Workspace.Game.GameStats.Wave.Value == Wave
-            repeat task.wait(0.5) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
             for _,v in next, Workspace.Game.Towers:GetChildren() do
                 if v.Number.Value == Tower then
                     ReplicatedStorage.Events.SellTower:InvokeServer(v)
@@ -92,8 +98,8 @@ end
 function Table:UpgradeTower(Tower,Path,Wave,Time)
     spawn(function()
         if IsGame() then
-            repeat task.wait(0.5) until Workspace.Game.GameStats.Wave.Value == Wave
-            repeat task.wait(0.5) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
             for _,v in next, Workspace.Game.Towers:GetChildren() do
                 if v.Number.Value == Tower then
                     ReplicatedStorage.Events.UpgradeTower:InvokeServer(v, Path)
@@ -118,7 +124,7 @@ function Table:CreateGame(Mode, Map, ModifiersTable)
                     ReplicatedStorage.Events.UpdateAttributes:FireServer(v)
                 end
             end
-            --ReplicatedStorage.Events.StartGame:InvokeServer()
+            ReplicatedStorage.Events.StartGame:InvokeServer()
         end
     end)
 end
@@ -127,6 +133,15 @@ function Table:StartGame(Difficulty)
     spawn(function()
         if IsGame() then
             ReplicatedStorage.Events.VoteGamemode:FireServer(Difficulty)
+        end
+    end)
+end
+
+function Table:EndVote(Time)
+    spawn(function()
+        if IsGame() then
+            repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
+            ReplicatedStorage.Events.EndVote:FireServer()
         end
     end)
 end
