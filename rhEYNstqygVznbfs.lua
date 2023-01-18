@@ -123,7 +123,7 @@ end
 function Table:StartGame(Difficulty)
     spawn(function()
         if IsGame() then
-            ReplicatedStorage.Events.VoteGamemode:InvokeServer(Difficulty)
+            ReplicatedStorage.Events.VoteGamemode:FireServer(Difficulty)
         end
     end)
 end
