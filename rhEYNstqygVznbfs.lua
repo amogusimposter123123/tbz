@@ -5,7 +5,6 @@ end
 repeat task.wait(0.5) until game:IsLoaded()
 
 local Table = {};
-local TowerCounter = 0;
 local LocalPlayer = game:GetService("Players").LocalPlayer;
 local Workspace = game:GetService("Workspace");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
@@ -36,6 +35,7 @@ spawn(function()
         end
     end
 end)
+local TowerCounter = 0
 Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
         TowerCounter = TowerCounter + 1
         local NumberValue = Instance.new("NumberValue", Tower)
