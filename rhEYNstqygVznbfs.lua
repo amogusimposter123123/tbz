@@ -2,7 +2,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-repeat task.wait(1) until game:IsLoaded()
+repeat task.wait(0.5) until game:IsLoaded()
 
 local Table = {};
 local TowerCounter = 0;
@@ -45,79 +45,89 @@ Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
 end
 
 function Table:EquipLoadout(Tower1,Tower2,Tower3,Tower4,Tower5)
-    if IsLobby() then
-        local TowerList = {Tower1,Tower2,Tower3,Tower4,Tower5}
-        for _,v in next, LocalPlayer.TowersChosen:GetChildren() do
-            if v.Value ~= "" then
-                ReplicatedStorage.Events.EquipTower:InvokeServer(v.Value)
+    spawn(function()
+        if IsLobby() then
+            local TowerList = {Tower1,Tower2,Tower3,Tower4,Tower5}
+            for _,v in next, LocalPlayer.TowersChosen:GetChildren() do
+                if v.Value ~= "" then
+                    ReplicatedStorage.Events.EquipTower:InvokeServer(v.Value)
+                end
+            end
+            for i=1,5 do
+                if TowerList[i] ~= "" then
+                    ReplicatedStorage.Events.EquipTower:InvokeServer(TowerList[i])
+                end
             end
         end
-        for i=1,5 do
-            if TowerList[i] ~= "" then
-                ReplicatedStorage.Events.EquipTower:InvokeServer(TowerList[i])
-            end
-        end
-    end
+    end)
 end
 
 function Table:PlaceTower(Tower,pos1,pos2,pos3,Wave,Time)
-    if IsGame() then
-        repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
-        repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
-        ReplicatedStorage.Events.PlaceTower:InvokeServer(Tower, Vector3.new(pos1, pos2, pos3), 0)
-    end
+    spawn(function()
+        if IsGame() then
+            repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            ReplicatedStorage.Events.PlaceTower:InvokeServer(Tower, Vector3.new(pos1, pos2, pos3), 0)
+        end
+    end)
 end
 
 function Table:SellTower(Tower,Wave,Time)
-    if IsGame() then
-        repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
-        repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
-        for _,v in next, Workspace.Game.Towers:GetChildren() do
-            if v.Number.Value == Tower then
-                ReplicatedStorage.Events.SellTower:InvokeServer(v)
-                break
+    spawn(function()
+        if IsGame() then
+            repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            for _,v in next, Workspace.Game.Towers:GetChildren() do
+                if v.Number.Value == Tower then
+                    ReplicatedStorage.Events.SellTower:InvokeServer(v)
+                end
             end
         end
-    end
+    end)
 end
 
 function Table:UpgradeTower(Tower,Path,Wave,Time)
-    if IsGame() then
-        repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
-        repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
-        for _,v in next, Workspace.Game.Towers:GetChildren() do
-            if v.Number.Value == Tower then
-                ReplicatedStorage.Events.UpgradeTower:InvokeServer(v, Path)
-                break
+    spawn(function()
+        if IsGame() then
+            repeat task.wait(0.2) until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait(0.2) until Workspace.Game.GameStats.TimeLeft.Value == Time
+            for _,v in next, Workspace.Game.Towers:GetChildren() do
+                if v.Number.Value == Tower then
+                    ReplicatedStorage.Events.UpgradeTower:InvokeServer(v, Path)
+                end
             end
         end
-    end
+    end)
 end
 
 function Table:CreateGame(Mode, Map, ModifiersTable)
-    if IsLobby() then
-        ReplicatedStorage.Events.LeaveServer:InvokeServer()
-        task.wait()
-        ReplicatedStorage.Events.StartServer:InvokeServer(Mode, "Invite")
-        task.wait()
-        ReplicatedStorage.Events.ChangeServerJoinOptions:InvokeServer(false)
-        task.wait()
-        ReplicatedStorage.Events.UpdateMap:InvokeServer(Map)
-        if ModifiersTable then
-            for _,v in next, ModifiersTable do
-                ReplicatedStorage.Events.UpdateAttributes:FireServer(v)
+    spawn(function()
+        if IsLobby() then
+            ReplicatedStorage.Events.LeaveServer:InvokeServer()
+            task.wait()
+            ReplicatedStorage.Events.StartServer:InvokeServer(Mode, "Invite")
+            task.wait()
+            ReplicatedStorage.Events.ChangeServerJoinOptions:InvokeServer(false)
+            task.wait()
+            ReplicatedStorage.Events.UpdateMap:InvokeServer(Map)
+            if ModifiersTable then
+                for _,v in next, ModifiersTable do
+                    ReplicatedStorage.Events.UpdateAttributes:FireServer(v)
+                end
             end
+            --ReplicatedStorage.Events.StartGame:InvokeServer()
         end
-        --ReplicatedStorage.Events.StartGame:InvokeServer()
-    end
+    end)
 end
 
 function Table:StartGame(Difficulty)
-    if IsGame() then
-        ReplicatedStorage.Events.VoteGamemode:InvokeServer(Difficulty)
-        task.wait()
-        ReplicatedStorage.Events.EndVote:FireServer()
-    end
+    spawn(function()
+        if IsGame() then
+            ReplicatedStorage.Events.VoteGamemode:InvokeServer(Difficulty)
+            task.wait()
+            ReplicatedStorage.Events.EndVote:FireServer()
+        end
+    end)
 end
 
 return Table
