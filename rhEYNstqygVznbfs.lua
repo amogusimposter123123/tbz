@@ -99,8 +99,9 @@ end
 function Table:UpgradeTower(Tower,Path,Wave,Time)
     spawn(function()
         if IsGame() then
-            repeat task.wait(0.5) until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
             repeat task.wait(0.5) until Workspace.Game.GameStats.TimeLeft.Value == Time
+	    print('ok')
             for _,v in next, Workspace.Game.Towers:GetChildren() do
                 if v.Value.Value == Tower then
                     ReplicatedStorage.Events.UpgradeTower:InvokeServer(v, Path)
