@@ -3,7 +3,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-repeat task.wait(1) until game:IsLoaded()
+repeat task.wait(1.5) until game:IsLoaded()
 
 local Table = {};
 local TowerCounter = 0;
