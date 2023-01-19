@@ -29,6 +29,18 @@ function IsGame()
     end
 end
 
+spawn(function()
+    if IsGame() then
+        while task.wait(1) do
+            for _,v in next, Workspace.Game.Towers:GetChildren() do
+                if v.Name == "Recon Base" then
+                    ReplicatedStorage.Events.Ability:FireServer(v, "Automatic")
+                end
+            end
+        end
+    end
+end)
+
 if IsGame() then
 spawn(function()
     while task.wait() do
