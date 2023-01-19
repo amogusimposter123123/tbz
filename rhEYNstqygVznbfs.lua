@@ -85,10 +85,10 @@ end
 function Table:SellTower(Tower,Wave,Time)
     spawn(function()
         if IsGame() then
-            repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
-            repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
+            repeat task.wait(0.5) until Workspace.Game.GameStats.Wave.Value == Wave
+            repeat task.wait(0.5) until Workspace.Game.GameStats.TimeLeft.Value == Time
             for _,v in next, Workspace.Game.Towers:GetChildren() do
-                if v.Number.Value == Tower then
+                if v.Value.Value == Tower then
                     ReplicatedStorage.Events.SellTower:InvokeServer(v)
                 end
             end
@@ -102,7 +102,7 @@ function Table:UpgradeTower(Tower,Path,Wave,Time)
             repeat task.wait() until Workspace.Game.GameStats.Wave.Value == Wave
             repeat task.wait() until Workspace.Game.GameStats.TimeLeft.Value == Time
             for _,v in next, Workspace.Game.Towers:GetChildren() do
-                if v.Number.Value == Tower then
+                if v.Value.Value == Tower then
                     ReplicatedStorage.Events.UpgradeTower:InvokeServer(v, Path)
                 end
             end
