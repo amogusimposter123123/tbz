@@ -6,6 +6,7 @@ end
 repeat task.wait(1) until game:IsLoaded()
 
 local Table = {};
+local ReconBases = 0;
 local TowerCounter = 0;
 local LocalPlayer = game:GetService("Players").LocalPlayer;
 local Workspace = game:GetService("Workspace");
@@ -41,10 +42,6 @@ Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
     spawn(function()
         local NumberValue = Instance.new("NumberValue", Tower)
         NumberValue.Value = TowerCounter
-	if Tower.Name == "Recon Base" then
-	    ReplicatedStorage.Events.Ability:FireServer(Tower, "Automatic")
-	    print('changed')
-	end
     end)
 end)
 local OldNameCall = nil;
@@ -52,6 +49,10 @@ local OldNameCall = nil;
         local Args = {...}
         if self.Name == "PlaceTower" then
             TowerCounter = TowerCounter + 1
+	if Args[1] == "Recon Base" then
+		ReconBases = ReconBases + 1
+		ReplicatedStorage.Events.Ability:FireServer(Workspace.Game.Towers:GetChildren()[ReconBases], "Automatic")
+	    end
         end
         return OldNameCall(self, ...)
     end))
