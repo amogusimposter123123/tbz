@@ -49,10 +49,10 @@ local OldNameCall = nil;
         local Args = {...}
         if self.Name == "PlaceTower" then
             TowerCounter = TowerCounter + 1
-	if Args[1] == "Recon Base" then
-		ReconBases = ReconBases + 1
-		ReplicatedStorage.Events.Ability:FireServer(Workspace.Game.Towers:GetChildren()[ReconBases], "Automatic")
-	    end
+	--if Args[1] == "Recon Base" then
+		--ReconBases = ReconBases + 1
+		--ReplicatedStorage.Events.Ability:FireServer(Workspace.Game.Towers:GetChildren()[ReconBases], "Automatic")
+	    --end
         end
         return OldNameCall(self, ...)
     end))
