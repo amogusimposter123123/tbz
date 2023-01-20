@@ -29,18 +29,6 @@ function IsGame()
     end
 end
 
-spawn(function()
-    if IsGame() then
-        while task.wait(1) do
-            for _,v in next, Workspace.Game.Towers:GetChildren() do
-                if v.Name == "Recon Base" then
-                    ReplicatedStorage.Events.Ability:FireServer(v, "Automatic")
-                end
-            end
-        end
-    end
-end)
-
 if IsGame() then
 spawn(function()
     while task.wait() do
@@ -53,7 +41,10 @@ Workspace.Game.Towers.ChildAdded:Connect(function(Tower)
     spawn(function()
         local NumberValue = Instance.new("NumberValue", Tower)
         NumberValue.Value = TowerCounter
-	print(TowerCounter, NumberValue.Name)
+	if Tower.Name == "Recon Base" then
+	    ReplicatedStorage.Events.Ability:FireServer(Tower, "Automatic")
+	    print('changed')
+	end
     end)
 end)
 local OldNameCall = nil;
