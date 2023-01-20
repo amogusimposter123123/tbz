@@ -52,6 +52,7 @@ local OldNameCall = nil;
 	    spawn(function()
 		if Args[1] == "Recon Base" then
 		    ReconBases = ReconBases + 1
+		    task.wait(0.5)
         	    ReplicatedStorage.Events.Ability:FireServer(Workspace.Game.Towers:GetChildren()[ReconBases], "Automatic")
 		    print('changed ' .. ReconBases)
 		end
